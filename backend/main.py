@@ -49,7 +49,10 @@ def start_registration(name):
 				azure_iden_id = values['azureIdentificationUserId'], name=name)
 
 		
-		db_response = model.add_user_to_group(values['voiceitUserId'])
+		db_response = model.get_user(values['voiceitUserId'])
+		if db_response:
+			model.add_user_to_group(db_response[0])
+		
 		return values
 	except Exception as e:
 		dic = {
