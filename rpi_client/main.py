@@ -1,6 +1,5 @@
 import speech_recognition as sr
 import time
-import record
 import keyboard
 from api_handler import AzureHandler, VoiceitHandler
 import sys

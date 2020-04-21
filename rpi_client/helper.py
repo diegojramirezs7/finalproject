@@ -1,4 +1,3 @@
-from speak import speak
 import record
 import speech_recognition as sr
 from request_handler import general_request, file_request

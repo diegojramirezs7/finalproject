@@ -1,7 +1,7 @@
 import http.client, urllib.request, urllib.parse, urllib.error, base64
 import json
 from voiceit2 import VoiceIt2
-from playsound import playsound
+
 
 class AzureHandler:
 	def __init__(self, endpoint, subkey):

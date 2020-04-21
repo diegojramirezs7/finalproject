@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, make_response, redirect, url_for
-from playsound import playsound
 from api_handler import AzureHandler, VoiceitHandler
 import json
 import speech_recognition as sr
