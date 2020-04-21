@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Admin Options</title>
+  </head>
+  <body>
+    {% extends "template.html" %}
+    {% block content %}
+    <div class="container">
+    	<h3>Groups</h3>
+      
+    	<table class="table table-hover">
+    	<thead>
+    		<tr>
+    			<th>Id</th>
+    			<th>Name</th>
+    			<th>Voiceit Group Id</th>
+          <th>Created</th>
+    		</tr>
+    	</thead>
+    	{% for item in dic%}
+        <form action="/get_group"></form>
+       	<tr onclick="showGroup()">
+       		{% for col in item %}
+       			<td> {{col}} </td>
+       		{% endfor %}
+       	</tr>
+       {% endfor %}
+       </table>
+
+        <!-- -------------Group Manipulation Modal Window------------------ --> 
+       <div class="modal fade" id="groupmodal" role="dialog">
+          <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title" id="groupmodal-title"></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body" id="groupmodal-body">
+                <h3>Id: </h3>
+                <div id="modal-group-id"></div>
+                <h3>Name:</h3>
+                <input type="text" name="groupName" class="form-control" id="modal-group-name" onkeyup="updateName()">
+                <h3>Users: </h3>
+                <div id="user_list">
+                  <table id="user_table" class="table table-hover">
+                    
+                  </table>
+                </div>
+              </div>
+              <div class="modal-footer" id="groupmodal-footer">
+                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmation">
+                  Delete
+                </button>
+                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#addUserModal"> 
+                  Add User Group
+                </button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="groupmodal-close" 
+                  onclick="saveClose()">
+                  Save and Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+         <!-- -------------Add User to Group Modal Window------------------ --> 
+        <div class="modal fade" id="addUserModal" role="dialog">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4>Enter User Id: </h4>
+              </div>
+              <div class="modal-body">
+                <input type="text" name="userId" id="modalUserId">
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="confirmation-cancel">
+                  Cancel
+                </button>
+                <button type="button" class="btn btn-primary" onclick="addUserToGroup()">Add user</button>
+                  
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+         <!-- -------------Delete Confirmation Modal Window------------------ --> 
+        <div class="modal fade" id="confirmation" role="dialog">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header"></div>
+              <div class="modal-body">
+                <div id="confirmation-box"></div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-danger" onclick="deleteGroup()">Delete</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" data-toggle="modal" 
+                  data-target="#modalresponse" id="confirmation-cancel">
+                  Cancel
+                </button>  
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+       <!-- ----------------------------Modal Asking for Group Name--------------------------------- -->
+       <div class="modal fade" id="createmodal" role="dialog">
+          <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title">Create New Group</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                
+              </div>
+              <div class="modal-body">
+                <h3>Name:</h3>
+                <input type="text" name="username" class="form-control" id="modal-ask-name">                
+              </div>
+              <div class="modal-footer">
+          
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="createGroup()">
+                  Save and Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- -------------Server Response Modal Window------------------ --> 
+        <div class="modal fade" id="modalresponse" role="dialog">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                Server Response
+              </div>
+              <div class="modal-body" id="modalresponse-body">
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="reload()">Ok</button>  
+              </div>
+            </div>
+          </div>
+        </div>
+
+       <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#createmodal" id="createGroupBtn">
+          Create Group
+       </button>
+    </div>
+    <script src="{{ url_for('static', filename='js/groups.js') }}"></script>
+    {% endblock %}
+  </body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Admin Options</title>
+    
+  </head>
+  <body>
+    {% extends "template.html" %}
+    {% block content %}
+    <div class="container">
+    	<h2 style="margin: 4px auto">Users</h2>
+      <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#usermodal" style="display: none"        id="showModalBtn">
+        
+      </button>
+    	<table class="table table-hover">
+    	<thead>
+    		<tr>
+    			<th>Id</th>
+    			<th>Name</th>
+    			<th>Voiceit Id</th>
+          <th>Azure Identify Id</th>
+    			<th>Azure Verify Id</th>
+          <th>Created</th>
+          <th>Voiceit Enrolled</th>
+          <th>Azure Identify Enrolled</th>
+          <th>Azure Verify Enrolled</th>
+    		</tr>
+    	</thead>
+    	{% for item in dic%}
+       	<tr class="user_row" onclick="showModal()">
+          {% for col in item %}
+            <td> {{col}} </td> 
+          {% endfor %}
+       		<!--<td><button class="btn btn-danger">Delete</button></td>-->
+       	</tr>
+       {% endfor %}
+       </table>
+
+       <!-- -------------User Manipulation Modal Window------------------ --> 
+       <div class="modal fade" id="usermodal" role="dialog">
+          <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title" id="usermodal-title"></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body" id="usermodal-body">
+                <h3>Id: </h3>
+                <div id="modal-user-id"></div>
+                <h3>Name:</h3>
+                <input type="text" name="username" class="form-control" id="modal-user-name" onkeyup="updateName()">
+                <h3>VoiceIt Id:</h3>
+                <div id="modal-voiceit-id"></div>
+                <h3>Azure Identification Id: </h3>
+                <div id="modal-azureiden-id"></div>
+                <h3>Azure Verification Id:</h3>
+                <div id="modal-azurever-id"></div>
+              </div>
+              <div class="modal-footer" id="usermodal-footer">
+                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmation">Delete</button>
+                <form action="/prepare_voiceit_enrollment" method="post" id="enroll-voiceit-form">
+                  <button type="button" class="btn btn-info" onclick="enrollVoiceit()" id="voiceit-enroll-btn">
+                    Enroll Voiceit
+                  </button>
+                  <input type="hidden" name="voiceitUserId" value="" id="voiceitUserId">
+                </form>
+                <form action="/prepare_azure_enrollment" method="post" id="enroll-azure-form">
+                  <button type="button" class="btn btn-info" onclick="enrollAzure()" id="azure-enroll-btn">
+                    Enroll Azure
+                  </button>
+                  <input type="hidden" name="voiceitId" id="voiceitId">
+                </form>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="usermodal-close" onclick="saveClose()">
+                  Save and Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- -------------Delete Confirmation Modal Window------------------ --> 
+        <div class="modal fade" id="confirmation" role="dialog">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header"></div>
+              <div class="modal-body">
+                <div id="confirmation-box"></div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-danger" onclick="deleteUser()">Delete</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" data-toggle="modal" 
+                  data-target="#modalresponse" id="confirmation-cancel">
+                  Cancel
+                </button>  
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- -------------Server Response Modal Window------------------ --> 
+        <div class="modal fade" id="modalresponse" role="dialog">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                Server Response
+              </div>
+              <div class="modal-body" id="modalresponse-body">
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="reload()">Ok</button>  
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/users.js') }}"></script>
+    {% endblock %}
+  </body>
+</html>

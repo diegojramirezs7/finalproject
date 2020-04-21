@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Enrollment</title>
+    <style type="text/css">
+      .rs{
+      	font-family: sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    {% extends "template.html" %}
+    {% block content %}
+    <div class="container">
+    	<h2>User Registered</h2>
+    	<div class="rs">
+    		<h4>Name:</h4>
+      		{{dic.name}}
+    	</div>
+    	<div class="rs">
+    		<h4>Azure Identification User Id:</h4>
+      		<div >{{dic.azureIdenId}}</div>
+      		<input type="hidden" name="azureiden-id" id="azureiden-id" value="{{dic.azureIdenId}}">
+    	</div>
+    	<div class="rs">
+    		<h4>Azure Verification User Id:</h4>
+      		<div >{{dic.azureVerId}}</div>
+      		<input type="hidden" name="azurever-id" id="azurever-id" value="{{dic.azureVerId}}">
+      		<input type="hidden" name="voiceit-id" id="voiceit-id" value="{{dic.voiceitId}}">
+    	</div>
+    	<div class="rs">
+    		<h4>Supported Phrases in the API</h4>
+    		<ul>
+            {% for phrase in dic.phrases %}
+             <li>{{phrase}}</li> <br>
+            {% endfor %}
+          </ul>
+    	</div>
+
+    	<div class="rs">
+    		<div id="controls">
+		    	<button id="recordButton" onclick="startRecording()" class="btn btn-primary">Record</button>
+		    	<input type="hidden" name="decision" value="">
+		    	<button id="stopButton" disabled class="btn btn-danger">Stop</button>
+    		</div>
+    		<!-- <div id="controls">
+		    	<button id="recordButton" onclick="startRecording()">Record</button>
+		    	<input type="hidden" name="decision" value="">
+		    	<button id="stopButton" disabled>Stop</button>
+    		</div> -->
+    		<p><strong>Recordings:</strong></p>
+    		<ol id="recordingsList"></ol>
+		    <!-- inserting these scripts at the end to be able to use all the elements in the DOM -->
+    	</div>
+
+    	<!-- -------------Server Response Modal Window------------------ --> 
+        <div class="modal fade" id="modalresponse" role="dialog">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                Server Response
+              </div>
+              <div class="modal-body" id="modalresponse-body">
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>  
+              </div>
+            </div>
+          </div>
+        </div>
+
+    </div>
+    <!-- <script src="https://cdn.rawgit.com/mattdiamond/Recorderjs/08e7abd9/dist/recorder.js"></script> -->
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+	<script src="{{url_for('static', filename='js/recorder.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/azure.js') }}"></script>
+    {% endblock %}
+    
+  </body>
+</html>
