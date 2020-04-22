@@ -254,7 +254,7 @@ Identify individual from a group of registered users
 #### MySQL DB
 1. Tables
 - user(azure_verification_id, azure_identification_id, voiceit_id)
-
+- vgroup 
 
 
 
