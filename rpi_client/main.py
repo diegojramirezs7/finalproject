@@ -1,12 +1,10 @@
 import speech_recognition as sr
 import time
 import keyboard
-from api_handler import AzureHandler, VoiceitHandler
 import sys
 from gtts import gTTS 
 import os
 from text_to_speech import tts
-from model import Model
 from helper import *
 
 # when we use the server the API objects are not needed
@@ -52,12 +50,15 @@ try:
                 if verification_id:
                     azure_verification_enrollment(verification_id, phrases)
             elif value == 'azure verify':
-                identification_response = azure_identify()
+                identification_response = azure_identification()
+                identification_response = json.loads(identification_response)
                 responseCode = identification_response.get('responseCode')
                 
                 if responseCode == 'SUCC':
                     verificationId = identification_response.get('verificationId')
-                    azure_verify(verificationId)
+                    if verificationId:
+                        azure_verification(verificationId)
+
             elif value == 'stop':
                 sys.exit()
         except sr.UnknownValueError:

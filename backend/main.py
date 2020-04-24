@@ -704,7 +704,8 @@ def get_azure_operation(operationId):
 	"""
 	count = 1
 	delay = 1.5
-	while count <= 5:
+	attempts = 5
+	while count <= attempts:
 		operation_response = azure.get_operation(operationId)
 		operation_response = parse_results(operation_response)
 		status = operation_response.get('status')
@@ -915,6 +916,25 @@ def azure_identification():
 				operation_url = identification_response.getheader('Operation-Location')
 				operation_id = get_operation_id(operation_url)
 				operation_response = get_azure_operation(operation_id)
+				operation_response = json.loads(operation_response)
+				if operation_response['response'] == 'SUCC':
+					message = operation_response['message']
+					message = json.loads(message)
+					identficationId = message.get('identifiedProfileId')
+					confidence = message.get('confidence')
+					user_tuple = model.get_user_from_azure_id(identficationId)
+					if user_tuple:
+						verificationId = user_tuple[4]
+						response_dic = {
+							'responseCode': 'SUCC',
+							'verificationId': verificationId,
+							'confidence': confidence,
+							'name': user_tuple[1]
+						}
+						response_dic_string = json.dumps(response_dic)
+						return response_dic_string
+
+
 				os.remove(file_path)
 				return operation_response
 			else:

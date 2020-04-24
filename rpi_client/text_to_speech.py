@@ -14,6 +14,6 @@ def tts(s, filename):
       
     # Saving the converted audio in a mp3 file named 
     # welcome
-    fs = filename+".mp3"
-    path = "ttsfiles/"+fs
-    myobj.save(path) 
+    #fs = filename+".mp3"
+    
+    myobj.save(filename) 

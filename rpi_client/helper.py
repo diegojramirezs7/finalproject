@@ -1,6 +1,7 @@
 import record
 import speech_recognition as sr
 from request_handler import general_request, file_request
+import os
 
 r = sr.Recognizer()
 m = sr.Microphone()
@@ -43,6 +44,8 @@ def start_voiceit_registration():
         method = 'POST'
         body = "{'name':'{0}', 'source': 'raspberry'}".format(name)
         response = general_request(path, method, body)
+        response = json.loads(response)
+        os.remove("name.wav")
         return response
     except Exception as e:
         return str(e)
@@ -59,7 +62,7 @@ def voiceit_enrollment(uid, phrases):
         iterations = 3
         audio_length = 5
         enrollment_filename = 'enrollment.wav'
-        response_filename = 'voiceit_enrollment_response'
+        response_filename = 'ttsfiles/voiceit_enrollment_response.mp3'
         
         print("supported phrases: \n", pretty_list(phrases))
 
@@ -82,6 +85,7 @@ def voiceit_enrollment(uid, phrases):
             
             #send request to local server (middleware)
             enrollment_response = file_request("/voiceit_enrollment", filename, params = params)
+            enrollment_response = json.loads(enrollment_response)
             enrollment_response_code = enrollment_response.get('responseCode')
             
             # if enrollment attempt is successful, provide user feedback and increment count
@@ -92,15 +96,16 @@ def voiceit_enrollment(uid, phrases):
             else:
                 tts(enrolmment_response['message'], response_filename)
 
-            enrollment_cmd = 'mpg321 ttsfiles/{}.mp3'.format(response_filename)
+            enrollment_cmd = 'mpg321 {}'.format(response_filename)
             os.system(enrollment_cmd)
 
+            # delete audio files created every time 
+            #if not explicitly deleted, they can cause problems for future requests
+            os.remove(enrollment_filename)
+            os.remove(response_filename)
+
+
         os.system("mpg321 ttsfiles/EnrollmentSuccess.mp3")
-        
-        # delete audio files created every time 
-        #if not explicitly deleted, they can cause problems for future requests
-        os.remove(enrollment_filename)
-        os.remove(response_filename)
         return enrollment_response
     except Exception as e:
         print(str(e))
@@ -116,9 +121,9 @@ def voiceit_verification(groupId):
     try:
         # identification process 
         verification_filename = 'verify.wav'
-        identification_response_filename = 'identification_response'
+        identification_response_filename = 'ttsfiles/identification_response.mp3'
         audio_length = 5
-        verification_response_filename = 'verification_response'
+        verification_response_filename = 'ttsfiles/verification_response.mp3'
 
         # do countdown and record
         os.system("mpg321 ttsfiles/startedVerification.mp3")
@@ -133,6 +138,7 @@ def voiceit_verification(groupId):
 
         # send request to server, with audio file and params as HTTP headers
         identification_response = file_request('/voiceit_identify', verification_filename, params)
+        identification_response = json.loads(identification_response)
         responseCode = identification_response.get('responseCode')
         
         # if identification is successful proceed to verification using the recorded file
@@ -154,11 +160,12 @@ def voiceit_verification(groupId):
             
             # provide feedback of identification request 
             tts(s, identification_response_filename)
-            identification_cmd = 'mpg321 ttsfiles/{}.mp3'.format(identification_response_filename)
+            identification_cmd = 'mpg321 {}'.format(identification_response_filename)
             os.system(identification_cmd)
             
             # send verification request
             verification_response = file_request('/voiceit_verify', verification_filename, params)
+            verification_response = json.loads(verification_response)
             verification_response_code = verification_response.get('responseCode')
            
             # if request is successful, get the confidence
@@ -170,7 +177,7 @@ def voiceit_verification(groupId):
             
             # provide feeback of verification request
             tts(st, verification_response_filename)
-            verification_cmd = 'mpg321 ttsfiles/{}.mp3'.format(verification_response_filename) 
+            verification_cmd = 'mpg321 {}'.format(verification_response_filename) 
             os.system(verification_cmd)
             
             # explicitly remove all audio files used for voice interaction
@@ -214,7 +221,7 @@ def azure_identification_enrollment(userId):
     """
     try:
         enrollment_filename = 'identification_enrollment.wav'
-        response_filename = 'idenfication_response'
+        response_filename = 'ttsfiles/idenfication_response.mp3'
         audio_length = 30
         path = "/azure_identification_enrollment"
         params = {
@@ -225,6 +232,7 @@ def azure_identification_enrollment(userId):
         os.system(countdown_cmd)
         record.record(audio_length, enrollment_filename)
         identification_response = file_request(path, enrollment_filename, params)
+        identification_response = json.loads(identification_response)
         responseCode = identification_response.get('responseCode')
         
         # provide audio feedback to the user
@@ -237,7 +245,7 @@ def azure_identification_enrollment(userId):
             else:
                 tts('error trying to enroll user for identification', response_filename)
 
-        speech_cmd = 'mpg321 ttsfiles/{}.mp3'.format(response_filename)
+        speech_cmd = 'mpg321 {}'.format(response_filename)
         os.system(speech_cmd)
         os.remove(response_filename)
         os.remove(enrollment_filename)
@@ -253,7 +261,7 @@ def azure_verification_enrollment(userId, phrases):
     """
     try:
         enrollment_filename = 'verification_enrollment.wav'
-        response_filename = 'verification_response'
+        response_filename = 'ttsfiles/verification_response.mp3'
         iterations = 3
         audio_length = 15
         path = '/azure_verification_enrollment'
@@ -280,12 +288,12 @@ def azure_verification_enrollment(userId, phrases):
             else:
                 tts("error trying to enroll user for verification ", response_filename)
 
-            speech_cmd = 'mpg321 ttsfiles/{}.mp3'.format(response_filename)
+            speech_cmd = 'mpg321 {}'.format(response_filename)
             os.system(speech_cmd)
+            os.remove(enrollment_filename)
+            os.remove(response_filename)
 
         os.system("mpg321 ttsfiles/EnrollmentSuccess.mp3")
-        os.remove(enrollment_filename)
-        os.remove(response_filename)
         return enrollment_response
     except Exception as e:
         print(str(e))
@@ -298,9 +306,9 @@ def azure_identification():
     """
     try:
         identification_filename = 'azure_identification.wav'
-        response_filename = 'identification_response'
+        response_filename = 'ttsfiles/identification_response.mp3'
         audio_length = 15
-        path = '/azure_identify'
+        path = '/azure_identification'
         params = {
             'filename': identification_filename,
         }
@@ -308,6 +316,7 @@ def azure_identification():
         os.system(countdown_cmd)
         record.record(audio_length, identification_filename)
         identification_response = file_request(path, identification_filename, params)
+        identification_response = json.loads(identification_response)
         responseCode = idenfication_response.get('identification_response')
         
         # provide audio feedback to user
@@ -322,7 +331,7 @@ def azure_identification():
             st = "Error identifying user"
 
         tts(st, response_filename)
-        identification_cmd = 'mpg321 ttsfiles/{0}.mp3'.format(response_filename)
+        identification_cmd = 'mpg321 {0}'.format(response_filename)
         os.system(identification_cmd)
         os.remove(identification_filename)
         os.remove(response_filename)
@@ -338,7 +347,7 @@ def azure_verification(userId):
     """
     try:
         verification_filename = 'azure_verification.wav'
-        response_filename = 'verification_response'
+        response_filename = 'ttsfiles/verification_response.mp3'
         audio_length = 15
         path = '/azure_verify'
         params = {
@@ -349,6 +358,7 @@ def azure_verification(userId):
         os.system(countdown_cmd)
         record.record(audio_length, verification_filename)
         verification_response = file_request(path, verification_filename, params)
+        verification_response = json.loads(verification_response)
         responseCode = verification_response.get('responseCode')
         
         # provide audio feedback to user
@@ -359,7 +369,7 @@ def azure_verification(userId):
             st = verification_response.get('message')
 
         tts(st, response_filename)
-        verification_cmd = 'mpg321 ttsfiles/{}.mp3'.format(response_filename)
+        verification_cmd = 'mpg321 {0}'.format(response_filename)
         os.system(verification_cmd)
         os.remove(verification_filename)
         os.remove(response_filename)

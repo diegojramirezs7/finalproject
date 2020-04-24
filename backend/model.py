@@ -51,6 +51,18 @@ class Model:
             print(str(e))
             return str(e)
 
+    def get_user_from_azure_id(self, azure_id):
+        # uses azure identification id to get the user
+        try:
+            sql = "SELECT * FROM user WHERE azure_iden_id = %s"
+            param  = (azure_id, )
+            self.cursor.execute(sql, param)
+            result = self.cursor.fetchone()
+            return result
+        except Exception as e:
+            print(str(e))
+            return str(e)
+
 
     def get_users(self):
         # returns list of tuples from all users in the user table
