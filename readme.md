@@ -272,7 +272,11 @@ Identify individual from a group of registered users
   - user_id: int
   - group_id: int
 
-
+### Extra Notes
+1. Both the code on the Raspberry Pi and on the server is running on Python 3.7.4, but should be compatible with all versions of Python 3. 
+2. Different API keys should be used. Silverservers should create an account on VoiceIt to generate their own keys and tokens for security reasons. The same azure endpoint can be used, but a new key should also be generated. 
+3. The server is built on top of Flask (Python web framework), which by default uses localhost. To use a static IP address or domain, it can be bound to a production server like Apache with a module such as mod_wsgi.
+4. Python dependencies are specified in the requirements.txt files of both the server and the RPi clients respectively. They can be installed on both the server and the RPi with the "pip" tool, included in all Python installations (e.g. pip install requirements.txt)
 
 
 
