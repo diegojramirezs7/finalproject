@@ -526,7 +526,7 @@ def voiceit_enrollment():
 			phrase = request.headers.get('phrase')
 			filename = request.headers.get('filename')
 			uid = request.headers.get('userId')
-			file_path = "/Users/diego_ramirezs/documents/flaskapp/audio_files/"+filename
+			file_path = "audio_files/"+filename
 			
 			f = request.files[filename]
 			f.save(file_path)
@@ -566,7 +566,7 @@ def voiceit_identify():
 			phrase = request.headers.get('phrase')
 			filename = request.headers.get('filename')
 			groupId = request.headers.get('groupId')
-			file_path = "/Users/diego_ramirezs/documents/flaskapp/audio_files/"+filename
+			file_path = "audio_files/"+filename
 
 			f = request.files[filename]
 			f.save(file_path)
@@ -621,7 +621,7 @@ def voiceit_verify():
 			phrase = request.headers.get('phrase')
 			filename = request.headers.get('filename')
 			userId = request.headers.get('userId')
-			file_path = "/Users/diego_ramirezs/documents/flaskapp/audio_files/"+filename+".wav"
+			file_path = "audio_files/"+filename+".wav"
 
 			f = request.files[filename]
 			f.save(file_path)
@@ -775,7 +775,7 @@ def azure_enroll_verification(userId, path):
 	# receives audio file and performs the API call, 
 	# then calls get_azure_operation to get the appropriate results
 	try:
-		verification_response, data = azure.enroll_verification_user(file_path, userId)
+		verification_response, data = azure.enroll_verification_user(path, userId)
 		statusCode = verification_response.status
 		if 200 <= statusCode < 300:
 			operation_url = verification_response.getheader('Operation-Location')
@@ -812,7 +812,7 @@ def azure_identification_enrollment():
 		if request.method == 'POST':
 			userId = request.headers.get('userId')
 			filename = request.headers.get('filename')
-			file_path = "/Users/diego_ramirezs/documents/flaskapp/audio_files/"+filename
+			file_path = "audio_files/"+filename
 
 			f = request.files[filename]
 			f.save(file_path)
@@ -856,7 +856,7 @@ def azure_verification_enrollment():
 		if request.method == 'POST':
 			userId = request.headers.get('userId')
 			filename = request.headers.get('filename')
-			file_path = "/Users/diego_ramirezs/documents/flaskapp/audio_files/"+filename
+			file_path = "audio_files/"+filename
 
 			f = request.files[filename]
 			f.save(file_path)
@@ -904,7 +904,7 @@ def azure_identification():
 			string_list = ",".join(userId_list)
 
 			filename = request.headers.get('filename')
-			file_path = "/Users/diego_ramirezs/documents/flaskapp/audio_files/"+filename
+			file_path = "audio_files/"+filename
 
 			f = request.files[filename]
 			f.save(file_path)
@@ -965,7 +965,7 @@ def azure_verification():
 		if request.method == 'POST':
 			userId = request.headers.get('userId')
 			filename = request.headers.get('filename')
-			file_path = "/Users/diego_ramirezs/documents/flaskapp/audio_files/"+filename
+			file_path = "audio_files/"+filename
 
 			f = request.files[filename]
 			f.save(file_path)
