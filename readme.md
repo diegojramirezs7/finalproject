@@ -7,7 +7,7 @@ It calls method on the record.py file and methods helper.py
 2. **Record and Save Audio File**
 Python script to rercord a wav file and save it to the local directory. Should be customizable to different durations and filename. This script can be a simple method or a method within a file.
 3. **Web Client that sends HTTP requests to Server**
-Python script that sends requests to the server running on silverservers for verification and identification. Each request would would contain the recorded .wav file, the keywords spoken and the command (identify, verify, enroll?)
+Python script that sends requests to the server running on silverservers for verification and identification. Each request would would contain the recorded .wav file, the keywords spoken and the command (identify, verify, enroll)
 
 ### Web Client -- admin website
 #### main services
@@ -16,8 +16,9 @@ Only through website forms.
 2. Create, View, Update (add/remove users) & Delete groups
 Only through website forms.
 3. Enroll users for identification
-Website form + wav file ()
+Website form + wav file
 4. Enroll users for verification
+Website form + wav file
 
 ### Server
 
@@ -28,7 +29,7 @@ This application is the main script attached to the server. It listens for the H
 **2 main services: Identification and verification**
 **accross all scripts, 2 common variables**
 - endpoint: https://voice-recog-ss.cognitiveservices.azure.com
-- subscription key: b30c8294acd244e2babe4e2d1451018c 
+- subscription key: 704c3dd99d09405f962d9dfce5719f13 
 
 The key and endpoint depend on subscription to Azure and the name of the created resource in Azure. 
 
@@ -251,10 +252,25 @@ Identify individual from a group of registered users
 {"textConfidence": 59.85, "timeTaken": "2.977s", "confidence": 97.84, "text": "Never forget tomorrow is a new day", "message": "Successfully verified voice for user with userId : usr_e10fcfd25d3c43879a827495d4653293", "responseCode": "SUCC", "status": 200}
 ```
 
-#### MySQL DB
-1. Tables
-- user(azure_verification_id, azure_identification_id, voiceit_id)
-- vgroup 
+### MySQL DB
+- user:
+  - p_key: int
+  - name: VARCHAR(64)
+  - voiceit_id: VARCHAR(40)
+  - azure_iden_id: VARCHAR(40) 
+  - azure_ver_id VARCHAR(40)
+  - created: TIMESTAMP
+  - voiceit_enrolled: BOOLEAN
+  - azure_identification_enrolled: BOOLEAN
+  - azure_verification_enrolled: BOOLEAN
+- vgroup:
+  - p_key: int
+  - group_name VARCHAR(128)
+  - voiceit_id: VARCHAR(64)
+  - created: TIMESTAMP
+- user_group:
+  - user_id: int
+  - group_id: int
 
 
 
