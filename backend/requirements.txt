@@ -1,0 +1,4 @@
+Flask
+SpeechRecognition
+mysql-connector
+voiceit2

@@ -934,7 +934,6 @@ def azure_identification():
 						response_dic_string = json.dumps(response_dic)
 						return response_dic_string
 
-
 				os.remove(file_path)
 				return operation_response
 			else:

@@ -3,7 +3,7 @@
 #### main services
 1. **Speech-To-Text** 
 Constantly listening for audio through USB microphone. Python script running in "daemon" mode, converting detected audio to text. Certain commands would trigger actions like "register, identify, verify". This script should only run the speech-to-text method and have some if statements to detect if certain commands are detected. The main python script running on the RPi. 
-It calls method on the record.py file and methods on requesthandler.py
+It calls method on the record.py file and methods helper.py
 2. **Record and Save Audio File**
 Python script to rercord a wav file and save it to the local directory. Should be customizable to different durations and filename. This script can be a simple method or a method within a file.
 3. **Web Client that sends HTTP requests to Server**
